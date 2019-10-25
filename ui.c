@@ -87,7 +87,7 @@ void present(const unsigned int ticks, const char card[], unsigned int color,
 
 	initscr();
 	noecho();
-	halfdelay(10);
+	nodelay(stdscr, 1);
 	curs_set(0);
 	clear();
 
@@ -129,7 +129,7 @@ void present(const unsigned int ticks, const char card[], unsigned int color,
 
 		// Again, no need to protect these. Worst that happens is a slightly
 		// wrong number.
-		float k = 1.0f / ticks / dumpinterval;
+		float k = 1.0f * TIME_RES / ticks / dumpinterval;
 		float ee = 100 * results->ee * k;
 		float vgt = 100 * results->vgt * k;
 		float gui = 100 * results->gui * k;
@@ -300,6 +300,8 @@ void present(const unsigned int ticks, const char card[], unsigned int color,
 		if (c == 'q' || c == 'Q') break;
 		if (c == 'c' || c == 'C') color = !color;
 		if (c == KEY_RESIZE) resize = 1;
+
+		usleep(dumpinterval * (1e6 / TIME_RES));
 	}
 
 	endwin();
